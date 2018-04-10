@@ -145,6 +145,10 @@ PAGE: ABOUT
 /*************************
 PAGE: CONTACT
 *************************/
+.error{
+    color: maroon;
+    font-size: .8em;
+}
 
 .contact-info{
     list-style:none;
