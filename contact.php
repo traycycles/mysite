@@ -27,7 +27,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $content = test_input($_POST["content"]);
     }
     $to_aws = json_encode(array('name' => $name, 'email' => $email, 'content' => $content));
-    echo $to_aws;
+//    echo $to_aws;
 }
 
 function test_input($data){
