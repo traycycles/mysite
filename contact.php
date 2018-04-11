@@ -6,6 +6,7 @@
  * Time: 10:06 AM
  */
 include 'includes/header.php';
+
 $name = $email= $content= "";
 $nameErr= $emailErr= $contentErr= "";
 
@@ -25,6 +26,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $content = test_input($_POST["content"]);
     }
+    $to_aws = json_encode(array('name' => $name, 'email' => $email, 'content' => $content));
+    echo $to_aws;
 }
 
 function test_input($data){
@@ -33,6 +36,8 @@ function test_input($data){
     $data = htmlspecialchars($data);
     return $data;
 }
+
+
 ?>
 
 <section>
@@ -52,5 +57,6 @@ function test_input($data){
         <br><br>
         <input type="submit" value="send">
     </form></section>
-<?php
+<?
+include 'includes/connecttoaws.php';
 include 'includes/footer.php' ?>
