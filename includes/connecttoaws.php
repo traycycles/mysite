@@ -8,7 +8,7 @@
 
 require '/var/www/html/vendor/autoload.php';
 
-$client = new Aws\S3\S3Client([
+$client = new Aws\Ses\SesClient([
     'version' => 'latest',
     'region'=> 'us-east-1'
 ]);

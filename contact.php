@@ -26,8 +26,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $message = test_input($_POST["message"]);
     }
-    $body = json_encode(array('email' => $email, 'subject' => $subject, 'message' => $message));
-//    echo $to_aws;
+    $body = array('email' => $email, 'subject' => $subject, 'message' => $message);
+
 }
 
 function test_input($data){
@@ -37,7 +37,7 @@ function test_input($data){
     return $data;
 }
 
-
+print_r($body);
 ?>
 
 <section>
@@ -46,10 +46,10 @@ function test_input($data){
         <span class="error">* All fields required</span></p>
 
     <form id="contactForm" method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
-        Email: <input type="text" name="email">
+        Email: <input type="email" name="email">
         <span class="error">*<?= $emailErr ?></span>
         <br><br>
-        Subject: <input type="email" name="subject">
+        Subject: <input type="text" name="subject">
         <span class="error">*<?= $subjectErr ?></span>
         <br><br>
         Message:<br> <textarea rows="10" cols="100" name="message" form="contactForm"></textarea>
@@ -60,11 +60,24 @@ function test_input($data){
 <?php
 include 'includes/connecttoaws.php';
 
-$result = $client ->putObject(array(
-    'Bucket'=> 'tracymail',
-    'Key' => 'mail.txt',
-    'Body' => $body
-));
-
+//$result = $client ->putObject(array(
+//    'Bucket'=> 'tracymail',
+//    'Key' => 'mail.txt',
+//    'Body' => $body
+//));
+$result = $client->sendEmail([
+    'Destination' => 'traymarkthompson@gmail.com',
+    'Message' => [
+        'Body'=>[
+            'Text' =>[
+                'Data' => $body['message']
+            ],
+        ],
+        'Subject' =>[
+            'Data' => $body['subject']
+        ]
+    ],
+    'ReplyToAddress' => $body['email']
+]);
 
 include 'includes/footer.php' ?>
