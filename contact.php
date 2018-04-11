@@ -7,26 +7,26 @@
  */
 include 'includes/header.php';
 
-$name = $email= $content= "";
-$nameErr= $emailErr= $contentErr= "";
+$email = $subject= $message= "";
+$emailErr= $subjectErr= $messageErr= "";
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["name"])) {
-        $nameErr = "Name is required";
-    } else {
-        $name = test_input($_POST["name"]);
-    }
     if (empty($_POST["email"])) {
-        $emailErr = "email is required";
+        $emailErr = "Email is required";
     } else {
         $email = test_input($_POST["email"]);
     }
-    if (empty($_POST["content"])) {
-        $contentErr = "Name is required";
+    if (empty($_POST["subject"])) {
+        $subjectErr = "Subject is required";
     } else {
-        $content = test_input($_POST["content"]);
+        $subject = test_input($_POST["subject"]);
     }
-    $to_aws = json_encode(array('name' => $name, 'email' => $email, 'content' => $content));
+    if (empty($_POST["message"])) {
+        $messageErr = "Message is required";
+    } else {
+        $message = test_input($_POST["message"]);
+    }
+    $body = json_encode(array('email' => $email, 'subject' => $subject, 'message' => $message));
 //    echo $to_aws;
 }
 
@@ -46,17 +46,25 @@ function test_input($data){
         <span class="error">* All fields required</span></p>
 
     <form id="contactForm" method="post" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]) ?>">
-        Name: <input type="text" name="name">
-        <span class="error">*<?= $nameErr ?></span>
-        <br><br>
-        Email: <input type="email" name="email">
+        Email: <input type="text" name="email">
         <span class="error">*<?= $emailErr ?></span>
         <br><br>
-        Message:<br> <textarea rows="10" cols="100" name="content" form="contactForm"></textarea>
-        <span class="error">*<?= $contentErr ?></span>
+        Subject: <input type="email" name="subject">
+        <span class="error">*<?= $subjectErr ?></span>
+        <br><br>
+        Message:<br> <textarea rows="10" cols="100" name="message" form="contactForm"></textarea>
+        <span class="error">*<?= $messageErr ?></span>
         <br><br>
         <input type="submit" value="send">
     </form></section>
-<?
+<?php
 include 'includes/connecttoaws.php';
+
+$result = $client ->putObject(array(
+    'Bucket'=> 'tracymail',
+    'Key' => 'mail.txt',
+    'Body' => $body
+));
+
+
 include 'includes/footer.php' ?>
